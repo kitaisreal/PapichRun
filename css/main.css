@@ -1,5 +1,8 @@
 body {
 	padding: 0px;
 	margin: 0px;
-	background: black;
+	background-color: white;
+}
+#header{
+	text-align: center;
 }
