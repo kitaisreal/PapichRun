@@ -17,10 +17,13 @@ var loadState = {
     this.loadAssets();
     },
     loadAssets:function(){
-    game.load.image('star', 'assets/star.png');
+    game.load.image('block', 'assets/block.png');
     game.load.spritesheet('dude', 'assets/dude.png', 32, 48);
     game.load.image('sky','assets/sky.png');
     game.load.image('powerbar','assets/powerbar.png')
+    game.load.image('lava','assets/lava.png')
+    game.load.image('background','assets/background.png');
+    game.load.image('water','assets/water.png');
     },
     create:function(){
         game.state.start('menu');
@@ -28,6 +31,7 @@ var loadState = {
 }
 var menuState = {
     create:function(){
+        game.add.sprite(0,0,'sky')
         var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'Press Spase to Start Game', {
             font: '32px',
             fill: '#FFFFFF',
@@ -51,18 +55,60 @@ var menuState = {
 }
 
 var spaceKey;
+var blocks;
+var lava;
+var platforms;
+var hitPlatform;
+var waterPlatforms;
+var hitWater;
 var playState = {
 create:function() {
-    game.add.sprite(0,0,'sky');
-    star = game.add.sprite(500, 550, 'star');
-    star.checkWorldBounds = true;
-     star.events.onOutOfBounds.add(function(star) {
-        alert("EBAL")
-                    pipe.kill();
-                });
-    game.physics.arcade.enable(star);
 
-    player = game.add.sprite(32, game.world.height - 150, 'dude');
+    game.add.sprite(0,0,'background');
+    
+
+    platforms = game.add.group();
+
+    platforms.enableBody = true;
+
+    var block = platforms.create(0,640,'block');
+    block.body.immovable = true;
+    var block = platforms.create(100,640,'block');
+    block.body.immovable = true;
+    var block = platforms.create(200,640,'block');
+    block.body.immovable = true;
+    var block = platforms.create(300,640,'block');
+    block.body.immovable = true;
+    var block = platforms.create(700,380,'block');
+    block.body.immovable = true;
+    var block = platforms.create(1000,440,'block');
+    block.body.immovable = true;
+    var block = platforms.create(400,380,'block');
+    block.body.immovable = true;
+
+    waterPlatforms = game.add.group();
+    waterPlatforms.enableBody=true;
+
+    var block = waterPlatforms.create(428,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(500,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(600,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(700,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(800,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(900,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(1000,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(1100,640,'water');
+    block.body.immovable = true;
+    var block = waterPlatforms.create(1200,640,'water');
+    block.body.immovable = true;
+
+    player = game.add.sprite(32, game.world.height - 500, 'dude');
     game.physics.arcade.enable(player);
 
     player.body.bounce.y = 0.2;
@@ -71,25 +117,27 @@ create:function() {
 
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
+
     game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
     this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 },
 update:function() {
     cursors = game.input.keyboard.createCursorKeys();
     player.body.velocity.x = 0;
-    var hitStar = game.physics.arcade.collide(player, star);
 
+    hitPlatform = game.physics.arcade.collide(player, platforms);
+    hitWater = game.physics.arcade.collide(player,waterPlatforms);
     if (cursors.right.isDown)
     {
-        player.body.velocity.x = 50;
+        player.body.velocity.x = 150;
         player.animations.play('right');
     }
     if (cursors.left.isDown)
     {
-        player.body.velocity.x = -50;
+        player.body.velocity.x = -150;
         player.animations.play('left');
     }
-    if (hitStar){
+    if (hitWater){
         game.state.start('lose')
     }
     this.spaceKey.onDown.add(prepareToJump,this)
@@ -97,6 +145,7 @@ update:function() {
 }
 var PlayerJumpPower=0;
 function prepareToJump(){
+    if (hitPlatform){
               powerBar = game.add.sprite(player.x,player.y-50,"powerbar");
               powerBar.width = 0;
               powerTween = game.add.tween(powerBar).to({
@@ -104,6 +153,7 @@ function prepareToJump(){
             }, 1000, "Linear",true); 
               this.spaceKey.onDown.remove(prepareToJump, this);
               this.spaceKey.onUp.add(jump, this);
+          }
           }       
 function jump(){
     PlayerJumpPower= -powerBar.width*2-100
@@ -115,6 +165,8 @@ function jump(){
 }       
 var loseState = {
     create:function(){
+        
+        game.add.sprite(0,0,'sky')
         var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'You lost (Restart - Space)', {
             font: '32px',
             fill: '#FFFFFF',
@@ -137,7 +189,7 @@ var loseState = {
     }
 }
 
-var game = new Phaser.Game(800, 600, Phaser.CANVAS, 'game');
+var game = new Phaser.Game(1280, 720, Phaser.CANVAS, 'game');
 var star;
 var player;
 
