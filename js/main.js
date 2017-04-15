@@ -24,6 +24,9 @@ var loadState = {
     game.load.image('lava','assets/lava.png')
     game.load.image('background','assets/background.png');
     game.load.image('water','assets/water.png');
+    game.load.image('background_menu','assets/background_menu.jpg')
+    game.load.spritesheet('button_big', 'assets/button_big.png', 430, 134);
+    game.load.spritesheet('button_small','assets/button_small.png',292,105);
     },
     create:function(){
         game.state.start('menu');
@@ -31,26 +34,21 @@ var loadState = {
 }
 var menuState = {
     create:function(){
-        game.add.sprite(0,0,'sky')
-        var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'Press Spase to Start Game', {
-            font: '32px',
-            fill: '#FFFFFF',
-            stroke: '#000000',
-            strokeThickness: 3,
-            align: 'center'
-        });
-
-    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
-    this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        game.add.sprite(0,0,'background_menu')
+        PlayButton = game.add.button(426, 168, 'button_big', this.play, this, 1, 1, 0);
+        SettingsButton = game.add.button(495,318.41,'button_small',this.settings,this,1,1,0);
+        LeaderboardButton = game.add.button(495,438.35,'button_small',this.leaderboard,this,1,1,0);
     },
     update:function(){
-         if (this.spaceKey.isDown)
-    {
-        this.start()
-    }
     },
-    start:function(){
+    play:function(){
         game.state.start('play')
+    },
+    leaderboard:function(){
+        alert("LEADERBOARD")
+    },
+    settings:function(){
+        alert("SETTINGS")
     }
 }
 
