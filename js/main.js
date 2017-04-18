@@ -27,6 +27,9 @@ var loadState = {
     game.load.image('background_menu','assets/background_menu.jpg')
     game.load.spritesheet('button_big', 'assets/button_big.png', 430, 134);
     game.load.spritesheet('button_small','assets/button_small.png',292,105);
+    game.load.image('flyblock_1','assets/flyblock_1.png');
+    game.load.image('flyblock_2','assets/flyblock_2.png');
+    game.load.image('waterBottom','assets/waterBottom.png');
     },
     create:function(){
         game.state.start('menu');
@@ -51,7 +54,7 @@ var menuState = {
         alert("SETTINGS")
     }
 }
-
+//CONSTANTS
 var spaceKey;
 var blocks;
 var lava;
@@ -59,6 +62,10 @@ var platforms;
 var hitPlatform;
 var waterPlatforms;
 var hitWater;
+var flyBlockSpanInterval = 12000;
+var timer;
+var platformsSpeed=0.5;
+
 var playState = {
 create:function() {
 
@@ -69,44 +76,20 @@ create:function() {
 
     platforms.enableBody = true;
 
-    var block = platforms.create(0,640,'block');
+    var block = platforms.create(0,200,'flyblock_1');
     block.body.immovable = true;
-    var block = platforms.create(100,640,'block');
+    var block = platforms.create(800,500,'flyblock_1');
     block.body.immovable = true;
-    var block = platforms.create(200,640,'block');
-    block.body.immovable = true;
-    var block = platforms.create(300,640,'block');
-    block.body.immovable = true;
-    var block = platforms.create(700,380,'block');
-    block.body.immovable = true;
-    var block = platforms.create(1000,440,'block');
-    block.body.immovable = true;
-    var block = platforms.create(400,380,'block');
+    var block = platforms.create(300,400,'flyblock_1');
     block.body.immovable = true;
 
     waterPlatforms = game.add.group();
     waterPlatforms.enableBody=true;
 
-    var block = waterPlatforms.create(428,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(500,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(600,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(700,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(800,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(900,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(1000,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(1100,640,'water');
-    block.body.immovable = true;
-    var block = waterPlatforms.create(1200,640,'water');
+    var block = waterPlatforms.create(0,650,'waterBottom');
     block.body.immovable = true;
 
-    player = game.add.sprite(32, game.world.height - 500, 'dude');
+    player = game.add.sprite(32, game.world.height - 600, 'dude');
     game.physics.arcade.enable(player);
 
     player.body.bounce.y = 0.2;
@@ -118,11 +101,18 @@ create:function() {
 
     game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
     this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+
+    createFlyBlock();
+    //Create Fly Blocks in Range
+    timer = game.time.create(false);
+    timer.loop(flyBlockSpanInterval, createFlyBlock, this);
+    timer.start();
 },
 update:function() {
-    cursors = game.input.keyboard.createCursorKeys();
     player.body.velocity.x = 0;
 
+    cursors = game.input.keyboard.createCursorKeys();
+    movePlatforms();
     hitPlatform = game.physics.arcade.collide(player, platforms);
     hitWater = game.physics.arcade.collide(player,waterPlatforms);
     if (cursors.right.isDown)
@@ -138,8 +128,14 @@ update:function() {
     if (hitWater){
         game.state.start('lose')
     }
+    console.log("PLAYER X " + player.x + "    PLAYER Y " + player.y)
     this.spaceKey.onDown.add(prepareToJump,this)
+
 }
+}
+function movePlatforms(){
+    platforms.forEach(function(item) {
+    item.body.velocity.x = -30;}, this);
 }
 var PlayerJumpPower=0;
 function prepareToJump(){
@@ -161,6 +157,15 @@ function jump(){
     powerTween.stop();
     this.spaceKey.onUp.remove(jump, this);
 }       
+var block;
+function createFlyBlock(){
+    var blockNumber = game.rnd.integerInRange(1,2);
+    var y = game.rnd.integerInRange(100,500);
+    block = game.add.sprite(1300+platforms.x,y,'flyblock_'+blockNumber)
+    game.physics.enable(block);
+    block.body.immovable = true;
+    platforms.add(block);
+}
 var loseState = {
     create:function(){
         
