@@ -1,10 +1,9 @@
 var bootState = {
     create: function(){
-        game.physics.startSystem(Phaser.Physics.ARCADE);
-        game.state.start('load');
+        game.physics.startSystem(Phaser.Physics.ARCADE); 
+        game.state.start('load'); 
     }
 }
-
 var loadState = {
     preload:function(){
     var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'loading...', {
@@ -13,7 +12,7 @@ var loadState = {
             stroke: '#000000',
             strokeThickness: 3,
             align: 'center'
-        });
+        }); 
     this.loadAssets();
     },
     loadAssets:function(){
@@ -42,16 +41,14 @@ var menuState = {
         SettingsButton = game.add.button(495,318.41,'button_small',this.settings,this,1,1,0);
         LeaderboardButton = game.add.button(495,438.35,'button_small',this.leaderboard,this,1,1,0);
     },
-    update:function(){
-    },
     play:function(){
-        game.state.start('play')
+        game.state.start('play') 
     },
     leaderboard:function(){
-        alert("LEADERBOARD")
+        game.state.start('leaderboard');
     },
     settings:function(){
-        alert("SETTINGS")
+        game.state.start('settings') 
     }
 }
 //CONSTANTS
@@ -65,19 +62,19 @@ var hitWater;
 var flyBlockSpanInterval = 12000;
 var timer;
 var platformsSpeed=0.5;
-
+//
 var playState = {
 create:function() {
 
     game.add.sprite(0,0,'background');
     
 
-    platforms = game.add.group();
+    platforms = game.add.group(); 
 
-    platforms.enableBody = true;
+    platforms.enableBody = true; 
 
-    var block = platforms.create(0,200,'flyblock_1');
-    block.body.immovable = true;
+    var block = platforms.create(0,200,'flyblock_1'); 
+    block.body.immovable = true; 
     var block = platforms.create(800,500,'flyblock_1');
     block.body.immovable = true;
     var block = platforms.create(300,400,'flyblock_1');
@@ -103,7 +100,7 @@ create:function() {
     this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
 
     createFlyBlock();
-    //Create Fly Blocks in Range
+    
     timer = game.time.create(false);
     timer.loop(flyBlockSpanInterval, createFlyBlock, this);
     timer.start();
@@ -128,7 +125,6 @@ update:function() {
     if (hitWater){
         game.state.start('lose')
     }
-    console.log("PLAYER X " + player.x + "    PLAYER Y " + player.y)
     this.spaceKey.onDown.add(prepareToJump,this)
 
 }
@@ -166,6 +162,7 @@ function createFlyBlock(){
     block.body.immovable = true;
     platforms.add(block);
 }
+
 var loseState = {
     create:function(){
         
@@ -177,20 +174,69 @@ var loseState = {
             strokeThickness: 3,
             align: 'center'
         });
-
-    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]);
-    this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+        
+    game.input.keyboard.addKeyCapture([ Phaser.Keyboard.SPACEBAR ]); 
+    this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR); 
     },
     update:function(){
+        
          if (this.spaceKey.isDown)
     {
         this.start()
     }
     },
     start:function(){
-        game.state.start('play')
+        game.state.start('play') 
     }
 }
+
+
+var settingsState = {
+    create:function(){
+        
+        game.add.sprite(0,0,'sky')
+        var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'Your Settings', {
+            font: '32px',
+            fill: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 3,
+            align: 'center'
+        });
+        var BackButton = game.add.button(426, 500, 'button_small', this.back, this, 1, 1, 0);
+    },
+    back:function(){
+        game.state.start('menu') 
+    }
+}
+var leaderboardState = {
+    create:function(){
+        
+        game.add.sprite(0,0,'sky')
+        var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'LEADERBOARD!!!', {
+            font: '32px',
+            fill: '#FFFFFF',
+            stroke: '#000000',
+            strokeThickness: 3,
+            align: 'center'
+        });
+        var BackButton = game.add.button(426, 500, 'button_small', this.back, this, 1, 1, 0);
+    },
+    back:function(){
+        game.state.start('menu') 
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 
 var game = new Phaser.Game(1280, 720, Phaser.CANVAS, 'game');
 var star;
@@ -201,5 +247,7 @@ game.state.add('load',loadState,false);
 game.state.add('menu',menuState,false);
 game.state.add('play',playState,false);
 game.state.add('lose',loseState,false);
+game.state.add('settings',settingsState,false);
+game.state.add('leaderboard',leaderboardState,false);
 
 game.state.start('boot');
