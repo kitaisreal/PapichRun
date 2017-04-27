@@ -23,12 +23,16 @@ var loadState = {
     game.load.image('lava','assets/lava.png')
     game.load.image('background','assets/background.png');
     game.load.image('water','assets/water.png');
-    game.load.image('background_menu','assets/background_menu.jpg')
+    game.load.image('background_menu','assets/background_menu.png')
     game.load.spritesheet('button_big', 'assets/button_big.png', 430, 134);
     game.load.spritesheet('button_small','assets/button_small.png',292,105);
+    game.load.spritesheet('button_highscores','assets/highscores_button.png',272,96);
+    game.load.spritesheet('button_play','assets/play_button.png',272,94);
+    game.load.spritesheet('button_settings','assets/options_button.png',272,95)
     game.load.image('flyblock_1','assets/flyblock_1.png');
     game.load.image('flyblock_2','assets/flyblock_2.png');
     game.load.image('waterBottom','assets/waterBottom.png');
+
     },
     create:function(){
         game.state.start('menu');
@@ -36,10 +40,11 @@ var loadState = {
 }
 var menuState = {
     create:function(){
-        game.add.sprite(0,0,'background_menu')
-        PlayButton = game.add.button(426, 168, 'button_big', this.play, this, 1, 1, 0);
-        SettingsButton = game.add.button(495,318.41,'button_small',this.settings,this,1,1,0);
-        LeaderboardButton = game.add.button(495,438.35,'button_small',this.leaderboard,this,1,1,0);
+        game.add.sprite(0,0,'background');
+        game.add.sprite(0,0,'background_menu');
+        PlayButton = game.add.button(510, 310, 'button_play', this.play, this, 1, 0, 2);
+        SettingsButton = game.add.button(510,420.41,'button_settings',this.settings,this,1,0,2);
+        LeaderboardButton = game.add.button(510,530.35,'button_highscores',this.leaderboard,this,1,0,2);
     },
     play:function(){
         game.state.start('play') 
@@ -63,6 +68,11 @@ var flyBlockSpanInterval = 12000;
 var timer;
 var platformsSpeed=0.5;
 //
+var gamePlatforms = {
+    createBlock:function(){
+        console.log(123);
+    }
+}
 var playState = {
 create:function() {
 
@@ -72,9 +82,7 @@ create:function() {
     platforms = game.add.group(); 
 
     platforms.enableBody = true; 
-
-    var block = platforms.create(0,200,'flyblock_1'); 
-    block.body.immovable = true; 
+    gamePlatforms.createBlock();
     var block = platforms.create(800,500,'flyblock_1');
     block.body.immovable = true;
     var block = platforms.create(300,400,'flyblock_1');
@@ -92,7 +100,7 @@ create:function() {
     player.body.bounce.y = 0.2;
     player.body.gravity.y = 300;
     player.body.collideWorldBounds = true;
-
+    
     player.animations.add('left', [0, 1, 2, 3], 10, true);
     player.animations.add('right', [5, 6, 7, 8], 10, true);
 
