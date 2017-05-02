@@ -1,0 +1,17 @@
+{
+  "name": "32",
+  "description": "PapichRunGame",
+  "main": "",
+  "authors": [
+    "Kita Maksim"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/kitaisreal/PapichRun",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
