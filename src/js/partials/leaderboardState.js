@@ -1,17 +1,13 @@
 var leaderboardState = {
     create:function(){
+
+        game.add.sprite(0,0,'background');
+        game.add.sprite(311.68,97,'bg_highscores');
+        BackButton =game.add.button(525.68,518.55,'back_button',this.back_button, this,1,0,2);
+       
         
-        game.add.sprite(0,0,'sky')
-        var loadingLabel = game.add.text(game.world.width / 3, game.world.height / 2, 'LEADERBOARD!!!', {
-            font: '32px',
-            fill: '#FFFFFF',
-            stroke: '#000000',
-            strokeThickness: 3,
-            align: 'center'
-        });
-        var BackButton = game.add.button(426, 500, 'button_small', this.back, this, 1, 1, 0);
-    },
-    back:function(){
-        game.state.start('menu') 
+},
+    back_button: function(){
+        game.state.start('menu')
     }
 }

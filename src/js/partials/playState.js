@@ -5,9 +5,12 @@ var platforms;
 var hitPlatform;
 var waterPlatforms;
 var hitWater;
-var flyBlockSpanInterval = 12000;
+var flyBlockSpanInterval = 6000;
 var timer;
-var platformsSpeed=0.5;
+var platformsSpeed=100;
+var playerSpeed;
+var player; 
+var playerJump;
 //
 var gamePlatforms = {
     createBlock:function(){
@@ -28,14 +31,15 @@ create:function() {
     block.body.immovable = true;
     var block = platforms.create(300,400,'flyblock_1');
     block.body.immovable = true;
-
+    var block = platforms.create(0,500,'flyblock_1');
+    block.body.immovable=true;
     waterPlatforms = game.add.group();
     waterPlatforms.enableBody=true;
 
     var block = waterPlatforms.create(0,650,'waterBottom');
     block.body.immovable = true;
 
-    player = game.add.sprite(32, game.world.height - 600, 'dude');
+    player = game.add.sprite(200, game.world.height - 600, 'dude');
     game.physics.arcade.enable(player);
 
     player.body.bounce.y = 0.2;
@@ -61,18 +65,15 @@ update:function() {
     movePlatforms();
     hitPlatform = game.physics.arcade.collide(player, platforms);
     hitWater = game.physics.arcade.collide(player,waterPlatforms);
-    if (cursors.right.isDown)
-    {
-        player.body.velocity.x = 150;
-        player.animations.play('right');
-    }
-    if (cursors.left.isDown)
-    {
-        player.body.velocity.x = -150;
-        player.animations.play('left');
-    }
+    player.animations.play('right');
+    player.body.velocity.x += platformsSpeed;
     if (hitWater){
         game.state.start('lose')
+    }
+    if (playerJump){
+            platforms.forEach(function(item) {
+                item.body.velocity.x = 0;           
+            });
     }
     this.spaceKey.onDown.add(prepareToJump,this)
 
@@ -80,7 +81,7 @@ update:function() {
 }
 function movePlatforms(){
     platforms.forEach(function(item) {
-    item.body.velocity.x = -30;}, this);
+    item.body.velocity.x =-platformsSpeed;}, this);
 }
 var PlayerJumpPower=0;
 function prepareToJump(){
@@ -90,6 +91,7 @@ function prepareToJump(){
               powerTween = game.add.tween(powerBar).to({
                width:100
             }, 1000, "Linear",true); 
+              playerJump=true;
               this.spaceKey.onDown.remove(prepareToJump, this);
               this.spaceKey.onUp.add(jump, this);
           }

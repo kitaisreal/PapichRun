@@ -14,14 +14,13 @@ var loseState = {
     this.spaceKey = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR); 
     },
     update:function(){
-        
          if (this.spaceKey.isDown)
     {
         this.start()
     }
     },
     start:function(){
-        game.state.start('play') 
+        game.state.start('menu') 
     }
 }
 

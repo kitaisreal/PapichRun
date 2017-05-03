@@ -26,8 +26,18 @@ var loadState = {
     game.load.image('flyblock_1','assets/flyblock_1.png');
     game.load.image('flyblock_2','assets/flyblock_2.png');
     game.load.image('waterBottom','assets/waterBottom.png');
+        // settings
+//-------------------------------------------------------------
 
-    },
+    game.load.spritesheet('back_button','assets/settings/back.png',229,99);
+    game.load.image('speaker', 'assets/settings/speaker.png');
+    game.load.spritesheet('plus','assets/settings/plus.png',59,59);
+    game.load.spritesheet('minus','assets/settings/minus.png',59,59);
+    game.load.image('bg_settings','assets/settings/bg_22.png');
+    
+//  --------------highscores --------------------------
+    game.load.image('bg_highscores','assets/highscores/bg_highscores.png');
+  },  
     create:function(){
         game.state.start('menu');
     }
