@@ -24,7 +24,7 @@ var path = {
     src: { 
         html: 'src/*.html', 
         js: 'src/js/main.js',
-        style: 'src/style/main.scss',
+        style: 'src/style/main.css',
         img: 'src/assets/**/*.*', 
         fonts: 'src/fonts/**/*.*'
     },
@@ -52,12 +52,10 @@ gulp.task('html:build', function () {
         .pipe(reload({stream: true})); 
 });
 gulp.task('style:build', function () {
-    gulp.src(path.src.style) 
-        .pipe(sourcemaps.init())
-        .pipe(prefixer())
-        .pipe(cssmin()) 
-        .pipe(sourcemaps.write())
-        .pipe(gulp.dest(path.build.css)) 
+    gulp.src(path.src.style)
+        .pipe(prefixer()) 
+        .pipe(cssmin())
+        .pipe(gulp.dest(path.build.css))
         .pipe(reload({stream: true}));
 });
 gulp.task('js:build', function () {

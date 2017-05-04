@@ -1,8 +1,15 @@
-body {
-	padding: 0px;
-	margin: 0px;
-	background-color: white;
+html {
+  width: 100%;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
-#header{
-	text-align: center;
+
+body {
+  height: inherit;
+  width: inherit;
+  margin: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
