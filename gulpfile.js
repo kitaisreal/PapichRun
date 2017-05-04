@@ -9,8 +9,12 @@ var gulp = require('gulp'),
     cssmin = require('gulp-minify-css'),
     imagemin = require('gulp-imagemin'),
     pngquant = require('imagemin-pngquant'),
+    source = require('vinyl-source-stream'),
     rimraf = require('rimraf'),
     browserSync = require("browser-sync"),
+    babelify = require('babelify'),
+    browserify = require('browserify'),
+    gutil = require('gulp-util'),
     reload = browserSync.reload;
 
 var path = {
@@ -59,9 +63,27 @@ gulp.task('style:build', function () {
         .pipe(reload({stream: true}));
 });
 gulp.task('js:build', function () {
-    gulp.src(path.src.js) 
+    gulp.src(path.src.js)
         .pipe(rigger()) 
-        .pipe(uglify()) 
+        return browserify({
+            paths: [path.src.js],
+            entries: 'src/js/main.js',
+            debug: true,
+            transform: [
+                [
+                    babelify, {
+                        presets: ["es2015"]
+                    }
+                ]
+            ]
+        })
+        .transform(babelify)
+        .bundle().on('error', function(error) {
+            gutil.log(gutil.colors.red('[Build Error]', error.message));
+            this.emit('end');
+        })
+        .pipe(source(path.src.js))
+        .pipe(uglify()).on('error', gutil.log)
         .pipe(gulp.dest(path.build.js)) 
         .pipe(reload({stream: true})); 
 });
